@@ -1,3 +1,3 @@
-# Duodo!
+# Duodo
 
-Blocks websites until you hit your daily duolingo experience goal!
+Chrome extension that blocks websites until you hit your daily duolingo experience goal. WIP!
