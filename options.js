@@ -2,13 +2,17 @@ $(document).ready(() => {
   function setStorage() {
     let target = Number($('#target').val());
     let username = $('#username').val();
-    if (!Number.isInteger(target)) {
-      alert('gimme a number holmes');
+    // let sites = $('#sites').val();
+    // if sites.length < 1
+
+    if (username.length < 1 || !Number.isInteger(target)) {
+      alert('All fields required.');
     } else {
       chrome.storage.sync.set(
         {
           target: target,
-          username: username
+          username: username,
+          sites: ['*://*.facebook.com/*']
         },
         () => {
           $('#status').text(`target set to ${target}`);
