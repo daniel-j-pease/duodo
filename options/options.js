@@ -32,11 +32,11 @@ $(document).ready(() => {
       },
       obj => {
         typeof obj.username === 'string'
-          ? $('#username').val(`${obj.username}`)
-          : $('#username').val('');
+          ? $('#username').text(`${obj.username}`)
+          : $('#username').text('');
         typeof obj.target === 'number'
-          ? $('#target').val(`${obj.target}`)
-          : $('#target').val('');
+          ? $('#target').text(`${obj.target}`)
+          : $('#target').text('');
       }
     );
   }

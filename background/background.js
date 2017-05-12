@@ -28,12 +28,18 @@ window.onload = function() {
     chrome.webRequest.onBeforeRequest.addListener(
       details => {
         if (details.type === 'main_frame') {
-          console.log('deets:', details);
+          console.log(details);
           chrome.tabs.create({
-            url: 'blocked.html',
+            url: 'blocked/index.html',
             active: true
           });
           chrome.tabs.remove(details.tabId);
+          chrome.storage.sync.set({
+            currentBlock: details.url
+          });
+          chrome.storage.sync.get('currentBlock', obj => {
+            console.log('storage:', obj);
+          });
         }
         return { cancel: true };
       },
