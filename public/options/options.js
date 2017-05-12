@@ -71,5 +71,13 @@ $(document).ready(() => {
     });
   });
 
+  $('#github').click(() => {
+    console.log('clikced');
+    chrome.tabs.create({
+      url: 'https://github.com/daniel-j-pease',
+      active: true
+    });
+  });
+
   restoreOptions();
 });

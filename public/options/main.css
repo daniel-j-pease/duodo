@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'quicksand';
+  src: url('../fonts/quicksand/Quicksand-Regular.otf') format('truetype');
+}
+
+@font-face {
+  font-family: 'titillium';
+  src: url('../fonts/Titillium/Titillium-Regular.otf') format('truetype');
+}
+
+.header-titillium {
+  font-family: 'titillium';
+}
+
+.target-button {
+  color: #fafafa;
+  height: 100px;
+  width: 100px;
+}
+
+#increment {
+  background-color: blue;
+}
+
+#decrement {
+  background-color: green;
+}

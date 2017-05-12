@@ -3,7 +3,7 @@
   "name": "Duodo",
   "description": "Need motivationt to practice a language? Block your favorite sites until you hit your goal!",
   "version": "0.1",
-  "options_page": "options/index.html",
+  "options_page": "public/options/index.html",
   "background": {
     "scripts": ["background/background.js"],
     "persistent": true
