@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="main.css">
-    <title>Duodo Options</title>
-  </head>
-  <body>
-    <div>
-      <h1 class="header-titillium">DuoDo</h1>
-      <span class="header-titillium">Tough love for learning languages.</span>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../lib/normalize.css">
+  <link rel="stylesheet" href="main.css">
+  <title>Duodo Options</title>
+</head>
+
+<body>
+  <div id="welcome">
+    <span class="header-titillium header-main">DuoDo</span>
+    <span id="byline" class="header-titillium">Block websites until you finish your duolingo!</span>
+  </div>
+  <div id="main">
+    <div id="left">
+      <p>What's your duolingo username?</p>
+      <p>(not your email address)</p>
+      <br>
+      <p>What's your daily experience goal?</p>
+      <p>(has to be a multiple of 10)</p>
+      <br>
+      <p>Which sites do you want to block?</p>
+      <p>(e.g., reddit)</p>
     </div>
-    <div>
-      <div>Username:
-        <input type="text" id="username">
-      </div>
-      <div>Target:
-        <div id="increment" class="target-button">+</div>
-        <div id="target"></div>
-        <div id="decrement" class = "target-button">-</div>
-      </div>
-      <div>Sites:
-        <input type="text" id="site">
-        <button>add site</button>
-        <ul></ul>
-      </div>
-      <button id="save">save</button>
+    <div id="right">
+      <input type="text" id="username">
+      <buton id="edit">edit</buton>
+      <input type="text" id="target">
+      <button id="update">update</button>
+      <input type="text" id="site">
+      <button id="add">add</button>
     </div>
-    <br>
-    <div id="status"></div>
-    <br>
+  </div>
+  <div id="bucket-container">
+    <div id="bucket">
+    </div>
+  </div>
+  <footer>
+    <span id="faq">
+        F.A.Q.
+      </span> |
+    <span>
+      made with <img src="../assets/made_with_owl.png" alt="love"> by
+      <a href="" id="github">Dan</a>
+    </span>
+    <button>add site</button>
+    <button id="save">save</button>
     <button id="check">check storage</button>
     <button id="clear">clear storage</button>
-    <br>
-    <footer>
-      <div id="faq">
-        F.A.Q.
-      </div>
-    |
-      <div>
-        made with <img src="" alt=""> by <a href="" id="github">Dan</a>
-      </div>
-    </footer>
-    <script src="../jquery-3.2.1.min.js" charset="utf-8"></script>
-    <script src="options.js" charset="utf-8"></script>
-  </body>
+  </footer>
+  <script src="../lib/jquery-3.2.1.min.js" charset="utf-8"></script>
+  <script src="options.js" charset="utf-8"></script>
+</body>
+
 </html>

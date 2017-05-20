@@ -5,23 +5,124 @@
 
 @font-face {
   font-family: 'titillium';
-  src: url('../fonts/Titillium/Titillium-Regular.otf') format('truetype');
+  src: url('../fonts/Titillium/Titillium-ThinUpright.otf') format('truetype');
+}
+
+* {
+  font-size: 16px;
 }
 
 .header-titillium {
   font-family: 'titillium';
 }
 
-.target-button {
-  color: #fafafa;
-  height: 100px;
-  width: 100px;
+#welcome, #main, #bucket {
+  position: relative;
+}
+
+#welcome {
+  top: 10vh;
+}
+
+#main {
+  top: 15vh;
+}
+
+.header-main {
+  font-size: 6.854em;
+}
+
+#byline {
+  font-size: 1.618em;
+  display: block;
+}
+
+#welcome {
+  text-align: center;
+}
+
+#left {
+  background-color: #78C800;
+  text-align: right;
+  width: 51.5vw;
+  position: relative;
+  display: inline-block;
+}
+
+#right {
+  position: relative;
+  display: inline-block;
+  right: 0;
+  top: -20px;
+  width: 47.5vw;
+  text-align: left;
 }
 
 #increment {
-  background-color: blue;
+  background-color: #78C800;
 }
 
 #decrement {
-  background-color: green;
+  background-color: #a40000;
+}
+
+p, input {
+  line-height: 40px;
+  border: 1px solid #78C800;
+  border-radius: 25px;
+}
+
+input {
+  text-align: center;
+  display: block;
+  margin: 30px 20px 30px 0;
+}
+
+button {
+  display: inline-block;
+}
+
+input:focus, select:focus, textarea:focus, button:focus {
+  outline: none;
+}
+
+img {
+  width: 25px;
+  height: 25px;
+}
+
+#bucket-container {
+  width: 100vw;
+  text-align: center;
+}
+
+#bucket {
+  width: 450px;
+  height: 140px;
+  top: 20vh;
+  display: inline-block;
+}
+
+.blocked-site {
+  display: inline-block;
+  background-color: red;
+  line-height: 40px;
+  padding: 0 10px;
+  margin-top: 5px;
+}
+
+.ecks {
+  background-color: grey;
+  color: #fafafa;
+}
+
+.ecks:hover {
+  cursor: pointer;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  text-align: center;
 }

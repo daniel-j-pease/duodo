@@ -32,10 +32,10 @@ $(document).ready(() => {
       },
       obj => {
         typeof obj.username === 'string'
-          ? $('#username').text(`${obj.username}`)
+          ? $('#username').attr('placeholder', `${obj.username}`)
           : $('#username').text('');
         typeof obj.target === 'number'
-          ? $('#target').text(`${obj.target}`)
+          ? $('#target').attr('placeholder', `${obj.target}`)
           : $('#target').text('');
       }
     );
@@ -51,6 +51,21 @@ $(document).ready(() => {
         // most recent session is the last thing in the array.
         // each 'improvement' is broken down into its own item with its own timestamp
       });
+  }
+
+  function populateBucket() {
+    chrome.storage.sync.get('sites', obj => {
+      obj.sites.forEach(site => {
+        let temp = $('<div class="blocked-site"></div>').text(site + ' ');
+        temp.append($('<span class="ecks"> x</span>'));
+        $('#bucket').append(temp);
+      });
+    });
+  }
+
+  function addToBucket() {
+    let newSite = $('#site').val();
+    console.log(newSite);
   }
 
   $('#save').click(() => {
@@ -79,5 +94,8 @@ $(document).ready(() => {
     });
   });
 
+  $('#add').click(addToBucket);
+
   restoreOptions();
+  populateBucket();
 });
