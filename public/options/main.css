@@ -21,11 +21,11 @@
 }
 
 #welcome {
-  top: 10vh;
+  top: 5vh;
 }
 
 #main {
-  top: 15vh;
+  top: 10vh;
 }
 
 .header-main {
@@ -53,33 +53,35 @@
   position: relative;
   display: inline-block;
   right: 0;
-  top: -20px;
-  width: 47.5vw;
+  /*top: -40px;*/
+  width: 29.5vw;
   text-align: left;
 }
 
-#increment {
+.save {
+  display: none;
   background-color: #78C800;
+  opacity: .3;
 }
 
-#decrement {
-  background-color: #a40000;
+.display {
+  text-align: center;
+  display: inline-block;
 }
 
-p, input {
-  line-height: 40px;
-  border: 1px solid #78C800;
-  border-radius: 25px;
+.left-item, .right-item {
+  /*line-height: 40px*/
+  /*margin: 30px 0 30px 0;*/
+}
+
+.right-button {
+  display: inline;
 }
 
 input {
-  text-align: center;
-  display: block;
-  margin: 30px 20px 30px 0;
-}
-
-button {
-  display: inline-block;
+  display: none;
+  border: 1px solid #78C800;
+  border-radius: 25px;
 }
 
 input:focus, select:focus, textarea:focus, button:focus {

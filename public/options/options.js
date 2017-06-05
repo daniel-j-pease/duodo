@@ -27,16 +27,15 @@ $(document).ready(() => {
   function restoreOptions() {
     chrome.storage.sync.get(
       {
-        target: target,
-        username: username
+        doDuo_username: username,
+        doDuo_target: target
       },
       obj => {
-        typeof obj.username === 'string'
-          ? $('#username').attr('placeholder', `${obj.username}`)
-          : $('#username').text('');
-        typeof obj.target === 'number'
-          ? $('#target').attr('placeholder', `${obj.target}`)
-          : $('#target').text('');
+        console.log('ro', obj);
+        $('#username-display').text(`${obj.doDuo_username}`);
+        $('#username').text('');
+        $('#target-display').text(`${obj.doDuo_target}`);
+        $('#target').text('');
       }
     );
   }
@@ -68,14 +67,8 @@ $(document).ready(() => {
     console.log(newSite);
   }
 
-  $('#save').click(() => {
-    setStorage();
-    fetchData();
-  });
-
   $('#check').click(() => {
     chrome.storage.sync.get(obj => {
-      console.log('checking storage:', obj);
       restoreOptions();
     });
   });
@@ -87,11 +80,84 @@ $(document).ready(() => {
   });
 
   $('#github').click(() => {
-    console.log('clikced');
     chrome.tabs.create({
       url: 'https://github.com/daniel-j-pease',
       active: true
     });
+  });
+
+  $('.right-button').click(e => {
+    console.log($(e.target).prev());
+    // hide display text
+    $(e.target).hide();
+    // hide edit button
+    $(e.target).prev().prev().hide();
+    // reveal save button
+    $(e.target).prev().show();
+    // reveal input
+    $(e.target).next().show();
+  });
+
+  $('.save').click(startUpdateStorage);
+
+  function startUpdateStorage(e) {
+    $(e.target).hide();
+    $(e.target).prev().show();
+    let inputArr = $(e.target).prev().prev();
+    let field = $(e.target).prev().prev().attr('id');
+    let val = $(e.target).prev().prev().val();
+    // console.log('iA', inputArr, 'f', field, 'v', val);
+    field === 'username'
+      ? checkUsername(val, inputArr[0], field)
+      : checkNumber(val, inputArr[0], field);
+
+    // ping duo 'api'
+    // check integer
+  }
+
+  function checkNumber(val, input, field) {
+    console.log('cn', val, input, field);
+    if (!Number(val)) {
+      console.log('error, not num');
+      return;
+    } else {
+      console.log('do dom stuff');
+      updateStorage(val, field, input);
+      return;
+    }
+  }
+
+  function checkUsername(username, input, field) {
+    fetch(`http://www.duolingo.com/users/${username}`)
+      .then(r => r.json())
+      .then(data => {
+        console.log('data', data);
+        updateStorage(username, field, input);
+        return data;
+      })
+      .catch(err => {
+        console.log('err', err);
+        return err;
+      });
+  }
+
+  function updateStorage(val, field, input) {
+    console.log('us', val, field, input);
+    chrome.storage.sync.set(
+      {
+        [`doDuo_${field}`]: `${val}`
+      },
+      () => {
+        console.log('itme', $(`#${field}-display`));
+        $('input').hide();
+        $(`#${field}-display`).show();
+        restoreOptions();
+      }
+    );
+  }
+
+  $('.change').keydown(e => {
+    $(e.target).next().next().css('opacity', 1);
   });
 
   $('#add').click(addToBucket);

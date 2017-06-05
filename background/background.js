@@ -30,7 +30,7 @@ window.onload = function() {
         if (details.type === 'main_frame') {
           console.log(details);
           chrome.tabs.create({
-            url: 'blocked/index.html',
+            url: 'public/blocked/index.html',
             active: true
           });
           chrome.tabs.remove(details.tabId);

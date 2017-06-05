@@ -15,22 +15,39 @@
   </div>
   <div id="main">
     <div id="left">
-      <p>What's your duolingo username?</p>
-      <p>(not your email address)</p>
-      <br>
-      <p>What's your daily experience goal?</p>
-      <p>(has to be a multiple of 10)</p>
-      <br>
-      <p>Which sites do you want to block?</p>
-      <p>(e.g., reddit)</p>
+      <div id="username-info" class="left-item">
+        <p>What's your duolingo username?</p>
+        <p>(not your email address)</p>
+      </div>
+      <div id="experience-info" class="left-item">
+        <p>What's your daily experience goal?</p>
+        <p>(has to be a multiple of 10)</p>
+      </div>
+      <div id="site-info" class="left-item">
+        <p>Which sites do you want to block?</p>
+        <p>(e.g., reddit)</p>
+      </div>
     </div>
     <div id="right">
-      <input type="text" id="username">
-      <buton id="edit">edit</buton>
-      <input type="text" id="target">
-      <button id="update">update</button>
-      <input type="text" id="site">
-      <button id="add">add</button>
+      <div id="username-container" class="right-item">
+        <div id="username-display" class="display"></div>
+        <input type="text" id="username" class="change">
+        <button class="right-button">edit</button>
+        <button class="save">save</button>
+      </div>
+      <br>
+      <div id="target-container" class="right-item">
+        <div id="target-display" class="display"></div>
+        <input type="text" id="target" class="change">
+        <button class="right-button">update</button>
+        <button class="save">save</button>
+      </div>
+      <br>
+      <div id="add-container" class="right-item">
+        <input type="text" id="site">
+        <button class="save">save</button>
+        <button id="add" class="right-button">add</button>
+      </div>
     </div>
   </div>
   <div id="bucket-container">
@@ -45,8 +62,6 @@
       made with <img src="../assets/made_with_owl.png" alt="love"> by
       <a href="" id="github">Dan</a>
     </span>
-    <button>add site</button>
-    <button id="save">save</button>
     <button id="check">check storage</button>
     <button id="clear">clear storage</button>
   </footer>
