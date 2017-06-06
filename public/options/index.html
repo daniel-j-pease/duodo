@@ -25,30 +25,32 @@
       </div>
       <div id="site-info" class="left-item">
         <p>Which sites do you want to block?</p>
-        <p>(e.g., reddit)</p>
       </div>
     </div>
     <div id="right">
       <div id="username-container" class="right-item">
         <div id="username-display" class="display"></div>
-        <input type="text" id="username" class="change">
-        <button class="right-button">edit</button>
+        <input type="text" id="username" class="hidden">
+        <button class="right-button updater">edit</button>
         <button class="save">save</button>
       </div>
       <br>
       <div id="target-container" class="right-item">
         <div id="target-display" class="display"></div>
-        <input type="text" id="target" class="change">
-        <button class="right-button">update</button>
+        <input type="text" id="target" class="hidden">
+        <button class="right-button updater">update</button>
         <button class="save">save</button>
       </div>
       <br>
       <div id="add-container" class="right-item">
-        <input type="text" id="site">
-        <button class="save">save</button>
+        <input type="text" id="site" placeholder="e.g., reddit">
         <button id="add" class="right-button">add</button>
       </div>
     </div>
+  </div>
+  <div>
+    <div id="error"></div>
+    <div id="site-message"></div>
   </div>
   <div id="bucket-container">
     <div id="bucket">

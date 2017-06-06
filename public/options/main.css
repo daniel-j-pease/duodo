@@ -53,20 +53,29 @@
   position: relative;
   display: inline-block;
   right: 0;
-  /*top: -40px;*/
-  width: 29.5vw;
+  width: 35.5vw;
   text-align: left;
 }
 
 .save {
   display: none;
   background-color: #78C800;
-  opacity: .3;
+  opacity: .2;
+}
+
+#error, #site-message {
+  display: none;
+  width: 100vw;
+  text-align: center;
+  position: absolute;
+  top: 50vh;
 }
 
 .display {
   text-align: center;
   display: inline-block;
+  width: 168px;
+  text-align: center;
 }
 
 .left-item, .right-item {
@@ -79,9 +88,14 @@
 }
 
 input {
-  display: none;
   border: 1px solid #78C800;
   border-radius: 25px;
+  width: 165px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
 }
 
 input:focus, select:focus, textarea:focus, button:focus {

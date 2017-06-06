@@ -1,40 +1,20 @@
 $(document).ready(() => {
-  function setStorage() {
-    let target = Number($('#target').val());
-    let username = $('#username').val();
-    // let sites = $('#sites').val();
-    // if sites.length < 1
-
-    if (username.length < 1 || !Number.isInteger(target)) {
-      alert('All fields required.');
-    } else {
-      chrome.storage.sync.set(
-        {
-          target: target,
-          username: username,
-          sites: ['*://*.facebook.com/*']
-        },
-        () => {
-          $('#status').text(`target set to ${target}`);
-          setTimeout(() => {
-            $('#status').text('');
-          }, 750);
-        }
-      );
-    }
-  }
-
   function restoreOptions() {
     chrome.storage.sync.get(
       {
-        doDuo_username: username,
-        doDuo_target: target
+        duoDo_username: username,
+        duoDo_target: target
       },
       obj => {
         console.log('ro', obj);
-        $('#username-display').text(`${obj.doDuo_username}`);
+        $('.save').css('opacity', 0.2);
+        typeof obj.duoDo_username === 'string'
+          ? $('#username-display').text(`${obj.duoDo_username}`)
+          : $('#username-display').text(`e.g., DanLearnsFrench`);
+        typeof obj.duoDo_target === 'string'
+          ? $('#target-display').text(`${obj.duoDo_target}`)
+          : $('#target-display').text(`e.g., 30`);
         $('#username').text('');
-        $('#target-display').text(`${obj.doDuo_target}`);
         $('#target').text('');
       }
     );
@@ -53,8 +33,14 @@ $(document).ready(() => {
   }
 
   function populateBucket() {
-    chrome.storage.sync.get('sites', obj => {
+    chrome.storage.sync.get(['sites'], obj => {
+      if (!obj.sites) return;
+      $('#bucket').empty();
+      let stripped = [];
       obj.sites.forEach(site => {
+        stripped.push(site.slice(6, -6));
+      });
+      stripped.forEach(site => {
         let temp = $('<div class="blocked-site"></div>').text(site + ' ');
         temp.append($('<span class="ecks"> x</span>'));
         $('#bucket').append(temp);
@@ -62,9 +48,17 @@ $(document).ready(() => {
     });
   }
 
-  function addToBucket() {
-    let newSite = $('#site').val();
-    console.log(newSite);
+  function addToBucket(newSite) {
+    // let newSite = $($('#site')[0]).val();
+    // console.log(newSite);
+    chrome.storage.sync.get(['sites'], obj => {
+      let sitesArr = obj.sites || [];
+      sitesArr.push(newSite);
+      let sites = { sites: sitesArr };
+      chrome.storage.sync.set(sites, () => {
+        populateBucket();
+      });
+    });
   }
 
   $('#check').click(() => {
@@ -74,9 +68,12 @@ $(document).ready(() => {
   });
 
   $('#clear').click(() => {
-    chrome.storage.sync.remove(['username', 'target'], obj => {
-      console.log('storage cleared:', obj);
-    });
+    chrome.storage.sync.remove(
+      ['duoDo_username', 'duoDo_target', 'sites'],
+      obj => {
+        console.log('storage cleared:', obj);
+      }
+    );
   });
 
   $('#github').click(() => {
@@ -86,7 +83,7 @@ $(document).ready(() => {
     });
   });
 
-  $('.right-button').click(e => {
+  $('.updater').click(e => {
     console.log($(e.target).prev());
     // hide display text
     $(e.target).hide();
@@ -117,14 +114,25 @@ $(document).ready(() => {
 
   function checkNumber(val, input, field) {
     console.log('cn', val, input, field);
-    if (!Number(val)) {
-      console.log('error, not num');
+    if (!Number(val) || Number(val) % 10 !== 0) {
+      handleBadInput('target');
       return;
     } else {
       console.log('do dom stuff');
       updateStorage(val, field, input);
       return;
     }
+  }
+
+  function handleBadInput(str) {
+    $('.hidden').hide();
+    $('.display').show();
+    $('.save').css('opacity', 0.2);
+    $('#error').show();
+    $('#error').text(`Invalid ${str}. Please try again.`);
+    setTimeout(() => {
+      $('#error').hide();
+    }, 2000);
   }
 
   function checkUsername(username, input, field) {
@@ -136,7 +144,7 @@ $(document).ready(() => {
         return data;
       })
       .catch(err => {
-        console.log('err', err);
+        handleBadInput('username');
         return err;
       });
   }
@@ -145,22 +153,25 @@ $(document).ready(() => {
     console.log('us', val, field, input);
     chrome.storage.sync.set(
       {
-        [`doDuo_${field}`]: `${val}`
+        [`duoDo_${field}`]: `${val}`
       },
       () => {
         console.log('itme', $(`#${field}-display`));
-        $('input').hide();
+        $('.hidden').hide();
         $(`#${field}-display`).show();
         restoreOptions();
       }
     );
   }
 
-  $('.change').keydown(e => {
+  $('.hidden').keydown(e => {
     $(e.target).next().next().css('opacity', 1);
   });
 
-  $('#add').click(addToBucket);
+  $('#add').click(e => {
+    console.log('add', $(e.target).prev().val());
+    addToBucket('.....6stuff6543210');
+  });
 
   restoreOptions();
   populateBucket();
