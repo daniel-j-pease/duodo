@@ -1,23 +1,17 @@
 $(document).ready(() => {
   function restoreOptions() {
-    chrome.storage.sync.get(
-      {
-        duoDo_username: username,
-        duoDo_target: target
-      },
-      obj => {
-        console.log('ro', obj);
-        $('.save').css('opacity', 0.2);
-        typeof obj.duoDo_username === 'string'
-          ? $('#username-display').text(`${obj.duoDo_username}`)
-          : $('#username-display').text(`e.g., DanLearnsFrench`);
-        typeof obj.duoDo_target === 'string'
-          ? $('#target-display').text(`${obj.duoDo_target}`)
-          : $('#target-display').text(`e.g., 30`);
-        $('#username').text('');
-        $('#target').text('');
-      }
-    );
+    chrome.storage.sync.get(obj => {
+      console.log('ro', obj);
+      $('.save').css('opacity', 0.2);
+      typeof obj.duoDo_username === 'string'
+        ? $('#username-display').text(`${obj.duoDo_username}`)
+        : $('#username-display').text(`e.g., DanLearnsFrench`);
+      typeof obj.duoDo_target === 'string'
+        ? $('#target-display').text(`${obj.duoDo_target}`)
+        : $('#target-display').text(`e.g., 30`);
+      $('#username').text('');
+      $('#target').text('');
+    });
   }
 
   function fetchData() {
@@ -33,12 +27,12 @@ $(document).ready(() => {
   }
 
   function populateBucket() {
-    chrome.storage.sync.get(['sites'], obj => {
-      if (!obj.sites) return;
+    chrome.storage.sync.get(['duoDo_sites'], obj => {
+      if (!obj.duoDo_sites) return;
       $('#bucket').empty();
       let stripped = [];
-      obj.sites.forEach(site => {
-        stripped.push(site.slice(6, -6));
+      obj.duoDo_sites.forEach(site => {
+        stripped.push(site.slice(6, -2));
       });
       stripped.forEach(site => {
         let temp = $('<div class="blocked-site"></div>').text(site + ' ');
@@ -46,30 +40,32 @@ $(document).ready(() => {
         $('#bucket').append(temp);
       });
     });
+    $('#site').text('');
   }
 
   function addToBucket(newSite) {
-    // let newSite = $($('#site')[0]).val();
-    // console.log(newSite);
-    chrome.storage.sync.get(['sites'], obj => {
-      let sitesArr = obj.sites || [];
-      sitesArr.push(newSite);
+    // '*://*.facebook.com/*'
+    chrome.storage.sync.get(['duoDo_sites'], obj => {
+      let sitesArr = obj.duoDo_sites || [];
+      sitesArr.push(`*://*.${newSite}.*`);
       let sites = { sites: sitesArr };
-      chrome.storage.sync.set(sites, () => {
+      chrome.storage.sync.set({ duoDo_sites: sitesArr }, () => {
         populateBucket();
       });
     });
+    $('#site').val('');
   }
 
   $('#check').click(() => {
     chrome.storage.sync.get(obj => {
-      restoreOptions();
+      console.log('checking', obj);
+      return;
     });
   });
 
   $('#clear').click(() => {
     chrome.storage.sync.remove(
-      ['duoDo_username', 'duoDo_target', 'sites'],
+      ['duoDo_username', 'duoDo_target', 'duoDo_sites'],
       obj => {
         console.log('storage cleared:', obj);
       }
@@ -170,7 +166,7 @@ $(document).ready(() => {
 
   $('#add').click(e => {
     console.log('add', $(e.target).prev().val());
-    addToBucket('.....6stuff6543210');
+    addToBucket($(e.target).prev().val());
   });
 
   restoreOptions();

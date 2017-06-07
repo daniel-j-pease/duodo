@@ -4,7 +4,7 @@ window.onload = function() {
   (() => {
     chrome.storage.sync.get(obj => {
       console.log('checking storage:', obj);
-      updateFilters(obj.sites);
+      updateFilters(obj.duoDo_sites);
     });
   })();
 
