@@ -3,12 +3,35 @@ window.onload = function() {
   console.log('background js running');
   (() => {
     chrome.storage.sync.get(obj => {
-      console.log('checking storage:', obj);
-      updateFilters(obj.duoDo_sites);
+      console.log('bgjs', typeof obj.duoDo_sites);
+      typeof obj.duoDo_sites === 'undefined'
+        ? (() => {
+            updateFilters(undefined);
+            return;
+          })()
+        : updateFilters(obj.duoDo_sites);
+    });
+  })();
+
+  (() => {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      console.log('this one', changes.duoDo_sites.newValue);
+      !changes.duoDo_sites.newValue
+        ? (() => {
+            console.log('bg true', changes);
+            updateFilters(undefined);
+            return;
+          })()
+        : updateFilters(changes.duoDo_sites.newValue);
     });
   })();
 
   function updateFilters(urls) {
+    console.log('uf', urls, typeof urls);
+    if (urls === undefined) {
+      console.log('nope');
+      return;
+    }
     let urlObj = {
       urls: [],
       types: [
@@ -23,6 +46,7 @@ window.onload = function() {
       ]
     };
     for (let i = 0; i < urls.length; i++) {
+      console.log('happening');
       urlObj.urls.push(urls[i]);
     }
     chrome.webRequest.onBeforeRequest.addListener(
@@ -35,9 +59,9 @@ window.onload = function() {
           });
           chrome.tabs.remove(details.tabId);
           chrome.storage.sync.set({
-            currentBlock: details.url
+            duoDo_currentBlock: details.url
           });
-          chrome.storage.sync.get('currentBlock', obj => {
+          chrome.storage.sync.get('duoDo_currentBlock', obj => {
             console.log('storage:', obj);
           });
         }

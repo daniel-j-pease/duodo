@@ -5,10 +5,11 @@ $(document).ready(() => {
   let storage;
   (() => {
     chrome.storage.sync.get(
-      ['duoDo_target', 'duoDo_username', 'duoDo_sites'],
+      ['duoDo_currentBlock', 'duoDo_target', 'duoDo_username', 'duoDo_sites'],
       obj => {
         storage = obj;
-        $('#currentBlock').text(obj.currentBlock);
+        console.log('bg', obj.duoDo_currentBlock);
+        $('#currentBlock').text(obj.duoDo_currentBlock);
       }
     );
   })();

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Duodo",
-  "description": "Need motivationt to practice a language? Block your favorite sites until you hit your goal!",
+  "description": "Need motivation to practice a language? Block your favorite sites until you hit your goal!",
   "version": "0.1",
   "options_page": "public/options/index.html",
   "background": {

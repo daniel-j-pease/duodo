@@ -32,7 +32,7 @@ $(document).ready(() => {
       $('#bucket').empty();
       let stripped = [];
       obj.duoDo_sites.forEach(site => {
-        stripped.push(site.slice(6, -2));
+        stripped.push(site.slice(6, -6));
       });
       stripped.forEach(site => {
         let temp = $('<div class="blocked-site"></div>').text(site + ' ');
@@ -47,7 +47,7 @@ $(document).ready(() => {
     // '*://*.facebook.com/*'
     chrome.storage.sync.get(['duoDo_sites'], obj => {
       let sitesArr = obj.duoDo_sites || [];
-      sitesArr.push(`*://*.${newSite}.*`);
+      sitesArr.push(`*://*.${newSite}.com/*`);
       let sites = { sites: sitesArr };
       chrome.storage.sync.set({ duoDo_sites: sitesArr }, () => {
         populateBucket();
@@ -65,7 +65,7 @@ $(document).ready(() => {
 
   $('#clear').click(() => {
     chrome.storage.sync.remove(
-      ['duoDo_username', 'duoDo_target', 'duoDo_sites'],
+      ['duoDo_username', 'duoDo_target', 'duoDo_sites', 'duoDo_currentBlock'],
       obj => {
         console.log('storage cleared:', obj);
       }
