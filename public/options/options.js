@@ -28,7 +28,9 @@ $(document).ready(() => {
 
   function populateBucket() {
     chrome.storage.sync.get(['duoDo_sites'], obj => {
-      if (!obj.duoDo_sites) return;
+      if (!obj.duoDo_sites) {
+        return;
+      }
       $('#bucket').empty();
       let stripped = [];
       obj.duoDo_sites.forEach(site => {
