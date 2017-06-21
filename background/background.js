@@ -2,34 +2,67 @@
 window.onload = () => {
   console.log('background js running');
 
-  function getUrls() {
+  (function getUrls() {
+    console.log('getting');
     chrome.storage.sync.get(obj => {
       console.log('bg onload storage', obj);
     });
-  }
+  })();
 
   (function listenForChanges() {
-    console.log('listening');
     chrome.storage.onChanged.addListener((changes, namespace) => {
       console.log('cn', changes, namespace);
-      applyBlock(changes.duoDo_sites.newValue);
+      if (changes.duoDo_sites.newValue) {
+        console.log('new value!');
+        applyBlock(changes.duoDo_sites.newValue);
+      } else {
+        console.log('no new value!');
+        applyBlock([]);
+      }
     });
   })();
 
-  function block(object details) {
-    console.log('db ca', changes, area);
-  }
+  function applyBlock(urlArr) {
+    let urlObj = {
+      urls: [],
+      types: [
+        'main_frame',
+        'sub_frame',
+        'stylesheet',
+        'script',
+        'image',
+        'object',
+        'xmlhttprequest',
+        'other'
+      ]
+    };
 
-  function applyBlock() {
-    console.log('block applied');
-    chrome.webRequest.onBeforeRequest.addListener(details => {
-      block(changes, area);
-    });
-  }
+    for (let i = 0; i < urlArr.length; i++) {
+      urlObj.urls.push(urlArr[i]);
+    }
 
-  function removeBlock() {
-    console.log('block removed');
-    chrome.webRequest.onBeforeRequest.removeListener(block);
+    chrome.webRequest.onBeforeRequest.addListener(
+      details => {
+        console.log('details', details);
+        for (let i = 0; i < urlObj.urls.length; i++) {
+          if (details.url.includes(urlObj.urls[i].slice(6, -6))) {
+            console.log('includes', urlObj.urls[i]);
+            if (details.type === 'main_frame') {
+              chrome.tabs.create({
+                url: 'public/blocked/index.html',
+                active: true
+              });
+              chrome.tabs.remove(details.tabId);
+            }
+            return { cancel: true };
+          } else {
+            console.log('doesnt include');
+            return;
+          }
+        }
+      },
+      urlObj,
+      ['blocking']
+    );
   }
-  getUrls();
 };
