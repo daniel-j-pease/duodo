@@ -12,5 +12,6 @@
     "webRequest",
     "webRequestBlocking",
     "<all_urls>",
+    "tabs",
     "storage"]
 }
