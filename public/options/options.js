@@ -1,7 +1,7 @@
 $(document).ready(() => {
   function restoreOptions() {
+    console.log('ro fired');
     chrome.storage.sync.get(obj => {
-      console.log('ro', obj);
       $('.save').css('opacity', 0.2);
       typeof obj.duoDo_username === 'string'
         ? $('#username-display').text(`${obj.duoDo_username}`)
@@ -12,18 +12,6 @@ $(document).ready(() => {
       $('#username').text('');
       $('#target').text('');
     });
-  }
-
-  function fetchData() {
-    let target = Number($('#target').val());
-    let username = $('#username').val();
-    return fetch(`http://www.duolingo.com/users/${username}`)
-      .then(r => r.json())
-      .then(data => {
-        console.log('fetching:', data);
-        // most recent session is the last thing in the array.
-        // each 'improvement' is broken down into its own item with its own timestamp
-      });
   }
 
   function populateBucket() {
@@ -45,18 +33,114 @@ $(document).ready(() => {
     $('#site').text('');
   }
 
+  function startUpdateStorage(e) {
+    $(e.target).hide();
+    $(e.target).prev().show();
+    let inputArr = $(e.target).prev().prev();
+    let field = $(e.target).prev().prev().attr('id');
+    let val = $(e.target).prev().prev().val();
+    field === 'username'
+      ? checkUsername(val, inputArr[0], field)
+      : checkNumber(val, inputArr[0], field);
+  }
+
+  function handleBadInput(str) {
+    $('.hidden').hide();
+    $('.display').show();
+    $('.save').css('opacity', 0.2);
+    $('#error').show();
+    $('#error').text(`Invalid ${str}. Please try again.`);
+    setTimeout(() => {
+      $('#error').hide();
+    }, 2000);
+  }
+
+  function checkNumber(val, input, field) {
+    if (!Number(val) || Number(val) % 10 !== 0) {
+      handleBadInput('target');
+      return;
+    } else {
+      updateStorage(val, field, input);
+      return;
+    }
+  }
+
+  function checkUsername(username, input, field) {
+    fetch(`http://www.duolingo.com/users/${username}`)
+      .then(r => r.json())
+      .then(data => {
+        updateStorage(username, field, input);
+        return data;
+      })
+      .catch(err => {
+        handleBadInput('username');
+        return err;
+      });
+  }
+
+  function fetchData() {
+    let target = Number($('#target').val());
+    let username = $('#username').val();
+    return fetch(`http://www.duolingo.com/users/${username}`)
+      .then(r => r.json())
+      .then(data => {
+        console.log('fetching:', data);
+        // most recent session is the last thing in the array.
+        // each 'improvement' is broken down into its own item with its own timestamp
+      });
+  }
+
+  function updateStorage(val, field, input) {
+    chrome.storage.sync.set(
+      {
+        [`duoDo_${field}`]: `${val}`
+      },
+      () => {
+        $('.hidden').hide();
+        $(`#${field}-display`).show();
+        restoreOptions();
+      }
+    );
+  }
+
   function addToBucket(newSite) {
-    // '*://*.facebook.com/*'
     chrome.storage.sync.get(['duoDo_sites'], obj => {
       let sitesArr = obj.duoDo_sites || [];
       sitesArr.push(`*://*.${newSite}.com/*`);
-      let sites = { sites: sitesArr };
       chrome.storage.sync.set({ duoDo_sites: sitesArr }, () => {
         populateBucket();
       });
     });
     $('#site').val('');
   }
+
+  $('.save').click(startUpdateStorage);
+
+  $('.hidden').keydown(e => {
+    $(e.target).next().next().css('opacity', 1);
+  });
+
+  $('#add').click(e => {
+    addToBucket($(e.target).prev().val());
+  });
+
+  $('.updater').click(e => {
+    // hide display text
+    $(e.target).hide();
+    // hide edit button
+    $(e.target).prev().prev().hide();
+    // reveal save button
+    $(e.target).prev().show();
+    // reveal input
+    $(e.target).next().show();
+  });
+
+  $('#github').click(() => {
+    chrome.tabs.create({
+      url: 'https://github.com/daniel-j-pease',
+      active: true
+    });
+  });
 
   $('#check').click(() => {
     chrome.storage.sync.get(obj => {
@@ -72,103 +156,6 @@ $(document).ready(() => {
         console.log('storage cleared:', obj);
       }
     );
-  });
-
-  $('#github').click(() => {
-    chrome.tabs.create({
-      url: 'https://github.com/daniel-j-pease',
-      active: true
-    });
-  });
-
-  $('.updater').click(e => {
-    console.log($(e.target).prev());
-    // hide display text
-    $(e.target).hide();
-    // hide edit button
-    $(e.target).prev().prev().hide();
-    // reveal save button
-    $(e.target).prev().show();
-    // reveal input
-    $(e.target).next().show();
-  });
-
-  $('.save').click(startUpdateStorage);
-
-  function startUpdateStorage(e) {
-    $(e.target).hide();
-    $(e.target).prev().show();
-    let inputArr = $(e.target).prev().prev();
-    let field = $(e.target).prev().prev().attr('id');
-    let val = $(e.target).prev().prev().val();
-    // console.log('iA', inputArr, 'f', field, 'v', val);
-    field === 'username'
-      ? checkUsername(val, inputArr[0], field)
-      : checkNumber(val, inputArr[0], field);
-
-    // ping duo 'api'
-    // check integer
-  }
-
-  function checkNumber(val, input, field) {
-    console.log('cn', val, input, field);
-    if (!Number(val) || Number(val) % 10 !== 0) {
-      handleBadInput('target');
-      return;
-    } else {
-      console.log('do dom stuff');
-      updateStorage(val, field, input);
-      return;
-    }
-  }
-
-  function handleBadInput(str) {
-    $('.hidden').hide();
-    $('.display').show();
-    $('.save').css('opacity', 0.2);
-    $('#error').show();
-    $('#error').text(`Invalid ${str}. Please try again.`);
-    setTimeout(() => {
-      $('#error').hide();
-    }, 2000);
-  }
-
-  function checkUsername(username, input, field) {
-    fetch(`http://www.duolingo.com/users/${username}`)
-      .then(r => r.json())
-      .then(data => {
-        console.log('data', data);
-        updateStorage(username, field, input);
-        return data;
-      })
-      .catch(err => {
-        handleBadInput('username');
-        return err;
-      });
-  }
-
-  function updateStorage(val, field, input) {
-    console.log('us', val, field, input);
-    chrome.storage.sync.set(
-      {
-        [`duoDo_${field}`]: `${val}`
-      },
-      () => {
-        console.log('itme', $(`#${field}-display`));
-        $('.hidden').hide();
-        $(`#${field}-display`).show();
-        restoreOptions();
-      }
-    );
-  }
-
-  $('.hidden').keydown(e => {
-    $(e.target).next().next().css('opacity', 1);
-  });
-
-  $('#add').click(e => {
-    console.log('add', $(e.target).prev().val());
-    addToBucket($(e.target).prev().val());
   });
 
   restoreOptions();
