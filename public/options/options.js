@@ -27,10 +27,27 @@ $(document).ready(() => {
       stripped.forEach(site => {
         let temp = $('<div class="blocked-site"></div>').text(site + ' ');
         temp.append($('<span class="ecks"> x</span>'));
+        temp.click(removeSite);
         $('#bucket').append(temp);
       });
     });
     $('#site').text('');
+  }
+
+  function removeSite(e) {
+    let remove = $(e.target.parentElement)[0];
+    let removeText = $(e.target.parentElement)
+      .text()
+      .slice(0, $(e.target.parentElement).text().indexOf(' '));
+    chrome.storage.sync.get(['duoDo_sites'], obj => {
+      let newArr = obj.duoDo_sites.filter(site => {
+        return !site.includes(removeText);
+      });
+      chrome.storage.sync.set({ duoDo_sites: newArr }, obj => {
+        console.log('in cb', remove);
+        $(remove).remove();
+      });
+    });
   }
 
   function startUpdateStorage(e) {
