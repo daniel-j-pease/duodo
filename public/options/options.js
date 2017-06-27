@@ -1,6 +1,5 @@
 $(document).ready(() => {
   function restoreOptions() {
-    console.log('ro fired');
     chrome.storage.sync.get(obj => {
       $('.save').css('opacity', 0.2);
       typeof obj.duoDo_username === 'string'
@@ -17,6 +16,7 @@ $(document).ready(() => {
   function populateBucket() {
     chrome.storage.sync.get(['duoDo_sites'], obj => {
       if (!obj.duoDo_sites) {
+        $('#bucket').empty();
         return;
       }
       $('#bucket').empty();
@@ -44,7 +44,6 @@ $(document).ready(() => {
         return !site.includes(removeText);
       });
       chrome.storage.sync.set({ duoDo_sites: newArr }, obj => {
-        console.log('in cb', remove);
         $(remove).remove();
       });
     });
@@ -92,18 +91,6 @@ $(document).ready(() => {
       .catch(err => {
         handleBadInput('username');
         return err;
-      });
-  }
-
-  function fetchData() {
-    let target = Number($('#target').val());
-    let username = $('#username').val();
-    return fetch(`http://www.duolingo.com/users/${username}`)
-      .then(r => r.json())
-      .then(data => {
-        console.log('fetching:', data);
-        // most recent session is the last thing in the array.
-        // each 'improvement' is broken down into its own item with its own timestamp
       });
   }
 
@@ -161,7 +148,7 @@ $(document).ready(() => {
 
   $('#check').click(() => {
     chrome.storage.sync.get(obj => {
-      console.log('checking', obj);
+      console.log('storage checked:', obj);
       return;
     });
   });
@@ -171,10 +158,12 @@ $(document).ready(() => {
       ['duoDo_username', 'duoDo_target', 'duoDo_sites', 'duoDo_currentBlock'],
       obj => {
         console.log('storage cleared:', obj);
+        populateBucket();
       }
     );
   });
 
   restoreOptions();
   populateBucket();
+  dateMess();
 });
