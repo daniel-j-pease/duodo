@@ -2,26 +2,29 @@
 
 $(document).ready(() => {
   console.log('blocked dom loaded');
-  let storage;
   (() => {
-    chrome.storage.sync.get(
-      ['duoDo_currentBlock', 'duoDo_target', 'duoDo_username', 'duoDo_sites'],
-      obj => {
-        storage = obj;
-        console.log('bg', obj.duoDo_currentBlock);
-        $('#currentBlock').text(obj.duoDo_currentBlock);
-      }
-    );
+    console.log('getting');
+    // chrome.storage.sync.get(obj => {
+    // console.log('obj: ', obj);
+
+    // });
   })();
 
-  $('#duolingo').on('click', () => {
-    console.log(storage);
-    chrome.tabs.getSelected(null, tab => {
-      chrome.tabs.remove(tab.id, () => {});
-    });
-    chrome.tabs.create({
-      url: 'https://www.duolingo.com',
-      active: true
-    });
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('listening');
+    console.log('req, sender', message, sender);
+    $('#currentBlock').text(message.currentBlock);
+    $('#remaining').text(message.remaining);
+    return true;
   });
+
+  // $('#duolingo').on('click', () => {
+  //   chrome.tabs.query({ active: true }, tabs => {
+  //     chrome.tabs.remove(tabs[0].id);
+  //     chrome.tabs.create({
+  //       url: 'https://www.duolingo.com',
+  //       active: true
+  //     });
+  //   });
+  // });
 });

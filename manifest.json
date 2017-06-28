@@ -13,5 +13,6 @@
     "webRequestBlocking",
     "<all_urls>",
     "tabs",
-    "storage"]
+    "storage"
+  ]
 }

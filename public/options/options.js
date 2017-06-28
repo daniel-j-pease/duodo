@@ -155,7 +155,13 @@ $(document).ready(() => {
 
   $('#clear').click(() => {
     chrome.storage.sync.remove(
-      ['duoDo_username', 'duoDo_target', 'duoDo_sites', 'duoDo_currentBlock'],
+      [
+        'duoDo_username',
+        'duoDo_target',
+        'duoDo_sites',
+        'duoDo_currentBlock',
+        'duoDo_garnered'
+      ],
       obj => {
         console.log('storage cleared:', obj);
         populateBucket();
@@ -165,5 +171,4 @@ $(document).ready(() => {
 
   restoreOptions();
   populateBucket();
-  dateMess();
 });
