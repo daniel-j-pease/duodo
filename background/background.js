@@ -81,7 +81,7 @@ window.onload = () => {
             });
           });
       });
-    }, 15000);
+    }, 90000);
   })();
 
   function listenForBlockedTab() {}

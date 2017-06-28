@@ -110,10 +110,12 @@ $(document).ready(() => {
   function addToBucket(newSite) {
     chrome.storage.sync.get(['duoDo_sites'], obj => {
       let sitesArr = obj.duoDo_sites || [];
-      sitesArr.push(`*://*.${newSite}.com/*`);
-      chrome.storage.sync.set({ duoDo_sites: sitesArr }, () => {
-        populateBucket();
-      });
+      if (!sitesArr.includes(`*://*.${newSite}.com/*`)) {
+        sitesArr.push(`*://*.${newSite}.com/*`);
+        chrome.storage.sync.set({ duoDo_sites: sitesArr }, () => {
+          populateBucket();
+        });
+      }
     });
     $('#site').val('');
   }
@@ -155,13 +157,7 @@ $(document).ready(() => {
 
   $('#clear').click(() => {
     chrome.storage.sync.remove(
-      [
-        'duoDo_username',
-        'duoDo_target',
-        'duoDo_sites',
-        'duoDo_currentBlock',
-        'duoDo_garnered'
-      ],
+      ['duoDo_username', 'duoDo_target', 'duoDo_sites', 'duoDo_garnered'],
       obj => {
         console.log('storage cleared:', obj);
         populateBucket();
